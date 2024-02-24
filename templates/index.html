@@ -1,0 +1,75 @@
+<html>
+<title>Twitter Winner Picker</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+<body>
+<div id="container">
+<h1>Twitter Winner Picker</h1>
+<p><b><u>NOTE</u>: Due to Twitter API request limit, up to 200 <u>MOST RECENT</u> retweets, quote retweets, and hashtag tweets are retrieved per submit.</b></p>
+
+<h2>Retweets Winner Picker</h2>
+<form action="{{ url_for("index") }}" method="post"> 
+	<p>Full Tweet URL or Tweet ID:</p>
+	<p>Example URL: https://twitter.com/i0ki_LoL/status/1599455767500824583</p>
+	<p>Example ID: 1599455767500824583</p>
+	<p><input type="text" name="url" required/></p>
+	<p>How many winners?:</p>
+	<p><input type="number" min="1" name="num" required/></p>
+	<p><input type="submit" value="Submit"/></p>
+</form>
+
+
+<hr>
+
+<h2>Quote Retweets Winner Picker</h2>
+<form action="{{ url_for("quote_retweets") }}" method="post"> 
+	<p>Full Tweet URL or Tweet ID:</p>
+	<p>Example URL: https://twitter.com/i0ki_LoL/status/1599455767500824583</p>
+	<p>Example ID: 1599455767500824583</p>
+	<p><input type="text" name="url2" required/></p>
+	<p>Keyword in the quote retweet:</p>
+	<p><input type="text"  name="keyword" /></p>
+	<p>How many winners?:</p>
+	<p><input type="number" min="1" name="num2" required/></p>
+	<p><input type="submit" value="Submit"/></p>
+</form>
+
+<hr>
+
+<h2>Hashtag Tweet Winner Picker</h2>
+<form action="{{ url_for("hashtag_tweets") }}" method="post"> 
+	<p>Hashtag:</p>
+	<p>Example: #WorldCup</p>
+	<p><input type="text"  name="hashtag" /></p>
+	<p>How many winners?:</p>
+	<p><input type="number" min="1" name="num3" required/></p>
+	<p><input type="submit" value="Submit"/></p>
+</form>
+
+<hr>
+
+<h3>Number of qualified users:</h3>
+<p> {{ count }} </p>
+<h3>Winners:</h3>
+{% for winner in winners %}
+	{% if winner != "No winners. There are no retweets." and winner != "ERROR! Number of winners exceed # of qualified retweets" %}
+		<a href="https://twitter.com/{{winner}}" target="_blank">@{{winner}}</a>
+	{% else %}
+		{{ winner }} 
+	{% endif %}
+	<br>
+{% endfor %}
+
+{% for winner in q_winners %}
+	{% if winner != "No winners. There are no retweets." and winner != "ERROR! Number of winners exceed # of qualified retweets" and winner != "Invalid Hashtag. See example hashtag." %}
+		<a href="https://twitter.com/{{winner.username}}" target="_blank">@{{winner.username}}</a>
+		<p> {{ winner.text }} </p>
+	{% else %}
+		{{ winner }} 
+	{% endif %}
+	<br>
+{% endfor %}
+
+</body>
+</div>
+</html>
